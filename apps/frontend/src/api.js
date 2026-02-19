@@ -35,7 +35,7 @@ export const getAdminDashboardData = () => api.get("/admin/dashboard");
 // ---- Courses APIs ----
 export const getAllcoursesWithlessons = (page = 1, limit = 10) => api.post("/admin/courses", { page, limit }); 
 export const getCourse = (id) => api.get(`/admin/courses/${id}`);
-export const createCourses = (data) => api.post("/admin/courses", data);
+export const createCourses = (data) => api.post("/admin/course", data);
 export const updateCourse = (id, data) => api.put(`/admin/courses/${id}`, data);
 export const deleteCourse = (id) => api.delete(`/admin/courses/${id}`);
 

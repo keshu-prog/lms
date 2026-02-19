@@ -27,7 +27,7 @@ router.delete("/students/:userId/courses/:courseId", removeAssignment);
     
 
 router.post("/courses", getCourses);
-router.post("/courses", createCourse);
+router.post("/course", createCourse);
 router.put("/courses/:id", updateCourse);
 router.delete("/courses/:id", deleteCourse);
 
