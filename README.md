@@ -229,41 +229,43 @@ Role is embedded inside JWT payload.
 
 # Entity Relationships
 
+```
 User
 ├── Enrollment ── Course ── Lesson
 └── VideoProgress ── Lesson
-
+```
 
 # ER Diagram (Logical View)
 
+```
 +-----------+
-| User |
+|   User    |
 +-----------+
-|
-| 1..*
-|
+      |
+      | 1..*
+      |
 +-------------+
-| Enrollment |
+| Enrollment  |
 +-------------+
-|
-| ..1
-|
+      |
+      | *..1
+      |
 +-----------+
-| Course |
+|  Course   |
 +-----------+
-|
-| 1..
-|
+      |
+      | 1..*
+      |
 +-----------+
-| Lesson |
+|  Lesson   |
 +-----------+
-|
-| 1..*
-|
+      |
+      | 1..*
+      |
 +---------------+
 | VideoProgress |
 +---------------+
-
+```
 
 ## User
 Represents both:
