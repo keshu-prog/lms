@@ -49,6 +49,7 @@ export default function Courses() {
 
   const handleCourseSubmit = async () => {
     if (!courseForm.name) return alert("Name required");
+    if (!courseForm.description) return alert("Description required");
 
     if (editingCourse) {
       await updateCourse(editingCourse.id, courseForm);

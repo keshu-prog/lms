@@ -145,16 +145,52 @@ function AddStudentModal({ onClose, refresh }) {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
 
   const handleSubmit = async () => {
-    await createStudent(form);
-    refresh();
-    onClose();
+    try {
+      if (!form.name.trim()) {
+        alert("Please enter student name");
+        return;
+      }
+      if (!form.email.trim()) {
+        alert("Please enter student email");
+        return;
+      }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(form.email)) {
+        alert("Please enter a valid email address");
+        return;
+      }
+      if (!form.password.trim()) {
+        alert("Please enter a password");
+        return;
+      }
+      await createStudent(form);
+      refresh();
+      onClose();
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || "Failed to create student");
+    }
   };
+
 
   return (
     <Modal title="Add Student" onClose={onClose}>
-      <input placeholder="Name" onChange={(e) => setForm({ ...form, name: e.target.value })} />
-      <input placeholder="Email" onChange={(e) => setForm({ ...form, email: e.target.value })} />
-      <input type="password" placeholder="Password" onChange={(e) => setForm({ ...form, password: e.target.value })} />
+      <input
+        placeholder="Name"
+        value={form.name}
+        onChange={(e) => setForm({ ...form, name: e.target.value })}
+      />
+      <input
+        placeholder="Email"
+        value={form.email}
+        onChange={(e) => setForm({ ...form, email: e.target.value })}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={form.password}
+        onChange={(e) => setForm({ ...form, password: e.target.value })}
+      />
       <button onClick={handleSubmit}>Create</button>
     </Modal>
   );
