@@ -41,12 +41,14 @@ The API is designed to serve multiple portals:
 ---
 
 # Project Structure
+
+```
 aaft/
 │
 ├── apps/
 │   ├── api/
 │   │   ├── prisma/
-│   │   │   └── schema.prisma
+│   │   │   ├── schema.prisma
 │   │   │   └── adminUserseed.ts
 │   │   ├── logs/
 │   │   ├── src/
@@ -77,39 +79,39 @@ aaft/
 │   │   ├── prisma.config.ts
 │   │   └── .env
 │   │
-│   ├──frontend/
-│   │   └──src/
-│   │   │   ├── components/
-│   │   │   │   ├── Sidebar.jsx
-│   │   │   │   ├── Header.jsx
-│   │   │   │   └── Modal.jsx
-│   │   │   │
-│   │   │   ├── layouts/
-│   │   │   │   └── DashboardLayout.jsx
-│   │   │   │
-│   │   │   ├── pages/
-│   │   │   │     ├── Landing.jsx
-│   │   │   │     ├── AdminLogin.jsx
-│   │   │   │     └── StudentLogin.jsx
-│   │   │   │     │
-│   │   │   │     │     ├── Dashboard.jsx
-│   │   │   │     │     ├── Students.jsx
-│   │   │   │     ├── admin/
-│   │   │   │     │     ├── Courses.jsx
-│   │   │   │     │     └── Reports.jsx
-│   │   │   │     │
-│   │   │   │     └── student/
-│   │   │   │           ├── Dashboard.jsx
-│   │   │   │           └── MyCourses.jsx
-│   │   │   ├──api.js      
-│   │   │   ├──App.jsx      
-│   │   │   ├──config.js     
-│   │   │   └──ProtectedRoute.jsx  
-│   │   ├──.env     
-│   │   └──package.json
-│   └──package.json      
+│   ├── frontend/
+│   │   └── src/
+│   │       ├── components/
+│   │       │   ├── Sidebar.jsx
+│   │       │   ├── Header.jsx
+│   │       │   └── Modal.jsx
+│   │       │
+│   │       ├── layouts/
+│   │       │   └── DashboardLayout.jsx
+│   │       │
+│   │       ├── pages/
+│   │       │   ├── Landing.jsx
+│   │       │   ├── AdminLogin.jsx
+│   │       │   ├── StudentLogin.jsx
+│   │       │   ├── Dashboard.jsx
+│   │       │   ├── Students.jsx
+│   │       │   ├── admin/
+│   │       │   │   ├── Courses.jsx
+│   │       │   │   └── Reports.jsx
+│   │       │   └── student/
+│   │       │       ├── Dashboard.jsx
+│   │       │       └── MyCourses.jsx
+│   │       │
+│   │       ├── api.js
+│   │       ├── App.jsx
+│   │       ├── config.js
+│   │       └── ProtectedRoute.jsx
+│   │   ├── .env
+│   │   └── package.json
+│   └── package.json
 │
 └── README.md
+```
 
 
 # Installation Guide
