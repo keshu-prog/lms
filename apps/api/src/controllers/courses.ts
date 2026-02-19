@@ -139,7 +139,8 @@ export const getCoursesByStudent = async (req, res) => {
       const course = e.course;
       const lessonsWithProgress = course.lessons.map((lesson) => {
         const lessonProgress = lesson.progress[0];
-        const percentage = lessonProgress ? lessonProgress.percentage : 0;
+        const percentage = lesson.duration > 0 ? (lessonProgress ? lessonProgress.timestamp / lesson.duration * 100 : 0) : 0;
+        const timestamp = lessonProgress ? lessonProgress.timestamp : 0;
         const completed = lessonProgress ? lessonProgress.completed : false;
 
         return {
@@ -150,6 +151,7 @@ export const getCoursesByStudent = async (req, res) => {
           duration: lesson.duration,
           courseId: lesson.courseId,
           percentage,
+          timestamp,
           completed,
         };
       });

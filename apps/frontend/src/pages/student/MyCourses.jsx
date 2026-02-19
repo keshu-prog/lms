@@ -6,55 +6,68 @@ export default function MyCourses() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentLesson, setCurrentLesson] = useState(null);
+
   const progressBuffer = useRef({});
   const progressTimer = useRef(null);
+  const videoRef = useRef(null);
 
+  // ================= FETCH COURSES =================
   useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const res = await getCoursesByStudent();
-        setCourses(res.data);
-      } catch (err) {
-        console.error("Failed to fetch courses", err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchCourses();
   }, []);
 
+  const fetchCourses = async () => {
+    try {
+      const res = await getCoursesByStudent();
+      setCourses(res.data);
+    } catch (err) {
+      console.error("Failed to fetch courses", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ================= WATCH LESSON =================
   const handleWatchLesson = (lesson) => {
     setCurrentLesson(lesson);
   };
 
-  const scheduleProgressUpdate = () => {
-    if (progressTimer.current) return; 
-
-    progressTimer.current = setTimeout(async () => {
-      const updates = { ...progressBuffer.current };
-      progressBuffer.current = {};
-      progressTimer.current = null;
-
-      for (const lessonId in updates) {
-        const { timestamp, percentage } = updates[lessonId];
-        try {
-          await updateVideoProgress(lessonId, { timestamp, percentage });
-        } catch (err) {
-          console.error("Failed to update progress for lesson", lessonId, err);
-        }
+  // ================= RESUME VIDEO =================
+  useEffect(() => {
+    if (currentLesson && videoRef.current) {
+      if (currentLesson.timestamp && currentLesson.timestamp > 0) {
+        videoRef.current.currentTime = currentLesson.timestamp;
       }
-      await refreshCourses();
-    }, 5000);
-  };
+    }
+  }, [currentLesson]);
 
-  const handleProgressChange = (lessonId, currentTime, videoDuration) => {
-    const percentage = (currentTime / videoDuration) * 100;
-    progressBuffer.current[lessonId] = { timestamp: Math.floor(currentTime), percentage };
+  // ================= PROGRESS HANDLING =================
+  const handleProgressChange = (lessonId, currentTime, duration) => {
+    if (!duration) return;
+
+    const percentage = (currentTime / duration) * 100;
+
+    progressBuffer.current[lessonId] = {
+      timestamp: Math.floor(currentTime),
+      percentage,
+    };
+
     scheduleProgressUpdate();
   };
 
+  const scheduleProgressUpdate = () => {
+    if (progressTimer.current) return;
+
+    progressTimer.current = setTimeout(async () => {
+      await flushProgress();
+    }, 5000);
+  };
+
   const flushProgress = async () => {
-    if (progressTimer.current) clearTimeout(progressTimer.current);
+    if (progressTimer.current) {
+      clearTimeout(progressTimer.current);
+      progressTimer.current = null;
+    }
 
     const updates = { ...progressBuffer.current };
     progressBuffer.current = {};
@@ -64,29 +77,24 @@ export default function MyCourses() {
       try {
         await updateVideoProgress(lessonId, { timestamp, percentage });
       } catch (err) {
-        console.error("Failed to update progress for lesson", lessonId, err);
+        console.error("Failed to update progress", err);
       }
     }
 
-    await refreshCourses();
+    await fetchCourses();
   };
 
-  const refreshCourses = async () => {
-    try {
-      const res = await getCoursesByStudent();
-      setCourses(res.data);
-    } catch (err) {
-      console.error("Failed to refresh courses", err);
-    }
-  };
-
+  // ================= HELPERS =================
   const calculateTotalDuration = (lessons) =>
     lessons.reduce((total, lesson) => total + lesson.duration, 0);
 
+  // ================= UI =================
   return (
     <DashboardLayout role="student">
       <div style={{ padding: "30px", background: "#f5f7fa", minHeight: "100vh" }}>
-        <h2 style={{ marginBottom: "30px", fontWeight: "600" }}>My Courses</h2>
+        <h2 style={{ marginBottom: "30px", fontWeight: "600" }}>
+          My Courses
+        </h2>
 
         {loading ? (
           <p>Loading courses...</p>
@@ -102,6 +110,7 @@ export default function MyCourses() {
           >
             {courses.map((course) => {
               const totalDuration = calculateTotalDuration(course.lessons);
+
               const overallProgress =
                 course.lessons.reduce((sum, l) => sum + l.percentage, 0) /
                 (course.lessons.length || 1);
@@ -114,11 +123,7 @@ export default function MyCourses() {
                     borderRadius: "12px",
                     overflow: "hidden",
                     boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
-                    transition: "0.3s ease",
-                    cursor: "pointer",
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-6px)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.transform = "translateY(0)")}
                 >
                   {/* Thumbnail */}
                   <div
@@ -136,28 +141,25 @@ export default function MyCourses() {
                     {course.name.charAt(0)}
                   </div>
 
-                  {/* Course Content */}
                   <div style={{ padding: "20px" }}>
-                    <h3 style={{ marginBottom: "8px", fontSize: "18px", fontWeight: "600" }}>
-                      {course.name}
-                    </h3>
-                    <p style={{ fontSize: "14px", color: "#5f6368", marginBottom: "12px" }}>
+                    <h3 style={{ marginBottom: "8px" }}>{course.name}</h3>
+                    <p style={{ fontSize: "14px", color: "#5f6368" }}>
                       {course.description}
                     </p>
 
-                    <div style={{ fontSize: "13px", color: "#6b7280", marginBottom: "12px" }}>
-                      {course.lessons.length} lessons • {totalDuration / 60} mins
+                    <div style={{ fontSize: "13px", marginBottom: "12px" }}>
+                      {course.lessons.length} lessons •{" "}
+                      {Math.floor(totalDuration / 60)} mins
                     </div>
 
-                    {/* Overall Progress Bar */}
+                    {/* Overall Progress */}
                     <div
                       style={{
                         height: "8px",
-                        width: "100%",
                         background: "#e2e8f0",
                         borderRadius: "4px",
-                        marginBottom: "12px",
                         overflow: "hidden",
+                        marginBottom: "8px",
                       }}
                     >
                       <div
@@ -165,11 +167,10 @@ export default function MyCourses() {
                           height: "100%",
                           width: `${overallProgress}%`,
                           background: "#0056d2",
-                          transition: "0.3s",
                         }}
-                      ></div>
+                      />
                     </div>
-                    <p style={{ fontSize: "12px", color: "#6b7280", marginBottom: "10px" }}>
+                    <p style={{ fontSize: "12px", marginBottom: "12px" }}>
                       Overall Progress: {overallProgress.toFixed(1)}%
                     </p>
 
@@ -178,51 +179,52 @@ export default function MyCourses() {
                       <div
                         key={lesson.id}
                         style={{
-                          fontSize: "14px",
-                          marginBottom: "6px",
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
+                          marginBottom: "10px",
                         }}
                       >
-                        <div style={{ flex: 1 }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
                           <span>• {lesson.title}</span>
-                          {/* Individual Lesson Progress */}
+
+                          <button
+                            style={{
+                              background: "#0056d2",
+                              color: "#fff",
+                              border: "none",
+                              padding: "4px 10px",
+                              borderRadius: "6px",
+                              cursor: "pointer",
+                              fontSize: "12px",
+                            }}
+                            onClick={() => handleWatchLesson(lesson)}
+                          >
+                            Watch
+                          </button>
+                        </div>
+
+                        {/* Lesson Progress */}
+                        <div
+                          style={{
+                            height: "6px",
+                            background: "#e2e8f0",
+                            borderRadius: "3px",
+                            marginTop: "4px",
+                            overflow: "hidden",
+                          }}
+                        >
                           <div
                             style={{
-                              height: "6px",
-                              width: "100%",
-                              background: "#e2e8f0",
-                              borderRadius: "3px",
-                              marginTop: "4px",
-                              overflow: "hidden",
+                              height: "100%",
+                              width: `${lesson.percentage}%`,
+                              background: "#10b981",
                             }}
-                          >
-                            <div
-                              style={{
-                                height: "100%",
-                                width: `${lesson.percentage}%`,
-                                background: "#10b981",
-                                transition: "0.3s",
-                              }}
-                            ></div>
-                          </div>
+                          />
                         </div>
-                        <button
-                          style={{
-                            background: "#0056d2",
-                            color: "white",
-                            border: "none",
-                            padding: "3px 8px",
-                            borderRadius: "6px",
-                            cursor: "pointer",
-                            fontSize: "12px",
-                            marginLeft: "10px",
-                          }}
-                          onClick={() => handleWatchLesson(lesson)}
-                        >
-                          Watch
-                        </button>
                       </div>
                     ))}
                   </div>
@@ -232,7 +234,7 @@ export default function MyCourses() {
           </div>
         )}
 
-        {/* Video Modal */}
+        {/* VIDEO MODAL */}
         {currentLesson && (
           <div
             style={{
@@ -263,19 +265,30 @@ export default function MyCourses() {
               }}
               onClick={(e) => e.stopPropagation()}
             >
-              <h3 style={{ marginBottom: "12px" }}>{currentLesson.title}</h3>
+              <h3 style={{ marginBottom: "12px" }}>
+                {currentLesson.title}
+              </h3>
+
               <video
+                ref={videoRef}
                 width="100%"
                 controls
                 onTimeUpdate={(e) => {
                   const video = e.target;
-                  const percentage = (video.currentTime / video.duration) * 100;
-                  handleProgressChange(currentLesson.id,video.currentTime, percentage);
+                  handleProgressChange(
+                    currentLesson.id,
+                    video.currentTime,
+                    video.duration
+                  );
                 }}
               >
-                <source src={currentLesson.videoUrl} type="video/mp4" />
+                <source
+                  src={currentLesson.videoUrl}
+                  type="video/mp4"
+                />
                 Your browser does not support the video tag.
               </video>
+
               <button
                 style={{
                   position: "absolute",
