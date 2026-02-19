@@ -1,0 +1,6 @@
+[2026-02-18 23:55:58] error: GET /api/admin/students-progress - Cannot read properties of undefined (reading 'length') - Stack: TypeError: Cannot read properties of undefined (reading 'length')
+    at <anonymous> (C:\Projects\aaft\apps\api\src\modules\reports.ts:21:90)
+    at Array.reduce (<anonymous>)
+    at <anonymous> (C:\Projects\aaft\apps\api\src\modules\reports.ts:21:48)
+    at Array.map (<anonymous>)
+    at getStudentProgress (C:\Projects\aaft\apps\api\src\modules\reports.ts:20:27)

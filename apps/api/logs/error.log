@@ -1,0 +1,22 @@
+[2026-02-18T17:38:40.574Z] [31merror[39m: GET /api/auth/me - userIds is not defined - Stack: ReferenceError: userIds is not defined
+    at getCurrentUser (C:\Projects\aaft\apps\api\src\modules\auth.ts:43:20)
+    at Layer.handleRequest (C:\Projects\aaft\apps\api\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Projects\aaft\apps\api\node_modules\router\lib\route.js:157:13)
+    at authenticate (C:\Projects\aaft\apps\api\src\middleware\auth.ts:28:5)
+    at Layer.handleRequest (C:\Projects\aaft\apps\api\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Projects\aaft\apps\api\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\Projects\aaft\apps\api\node_modules\router\lib\route.js:117:3)
+    at handle (C:\Projects\aaft\apps\api\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\Projects\aaft\apps\api\node_modules\router\lib\layer.js:152:17)
+    at C:\Projects\aaft\apps\api\node_modules\router\index.js:295:15
+[2026-02-18T17:38:40.595Z] [31merror[39m: GET /api/auth/me - userIds is not defined - Stack: ReferenceError: userIds is not defined
+    at getCurrentUser (C:\Projects\aaft\apps\api\src\modules\auth.ts:43:20)
+    at Layer.handleRequest (C:\Projects\aaft\apps\api\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Projects\aaft\apps\api\node_modules\router\lib\route.js:157:13)
+    at authenticate (C:\Projects\aaft\apps\api\src\middleware\auth.ts:28:5)
+    at Layer.handleRequest (C:\Projects\aaft\apps\api\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Projects\aaft\apps\api\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\Projects\aaft\apps\api\node_modules\router\lib\route.js:117:3)
+    at handle (C:\Projects\aaft\apps\api\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\Projects\aaft\apps\api\node_modules\router\lib\layer.js:152:17)
+    at C:\Projects\aaft\apps\api\node_modules\router\index.js:295:15

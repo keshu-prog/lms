@@ -1,0 +1,20 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "C:\\Projects\\aaft\\apps\\api\\logs\\.7c58442fc3be705d7ca95489334d13aa503cff15-audit.json",
+    "files": [
+        {
+            "date": 1771436612933,
+            "name": "C:\\Projects\\aaft\\apps\\api\\logs\\2026-02-18-error.log",
+            "hash": "57b927e3dd921143471183a286e1a0cc3376e4f22376253c2cd0a3c0adff9e2d"
+        },
+        {
+            "date": 1771439603644,
+            "name": "C:\\Projects\\aaft\\apps\\api\\logs\\2026-02-19-error.log",
+            "hash": "c4a208fb474bcca01970ec8a26c925940d6bf5f9aa458a14dbc39b2da5f42568"
+        }
+    ],
+    "hashType": "sha256"
+}
