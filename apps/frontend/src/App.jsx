@@ -12,6 +12,7 @@ import Reports from "./pages/admin/Reports";
 
 import StudentDashboard from "./pages/student/Dashboard";
 import MyCourses from "./pages/student/MyCourses";
+import NotFound from "./pages/NotFound";
 
 export default function App() {
   return (
@@ -74,7 +75,9 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-
+       {/* 404 Route */}
+        <Route path="/404" element={<NotFound />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

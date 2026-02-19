@@ -9,7 +9,7 @@ export default function ProtectedRoute({ children, role }) {
   }
 
   if (role && userRole !== role) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/404" replace />;
   }
 
   return children;
